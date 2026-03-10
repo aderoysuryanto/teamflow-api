@@ -1,11 +1,4 @@
-import "dotenv/config";
-import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
-
-const connectionString = `${process.env.DATABASE_URL}`;
-
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
+import prisma from "../src/database/prisma.js";
 
 async function seedSubscriptionPlans() {
   const plans = [
