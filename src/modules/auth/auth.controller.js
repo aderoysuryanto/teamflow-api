@@ -1,27 +1,38 @@
+import asyncHandler from "../../utils/asyncHandler.js";
 import * as authService from "./auth.service.js";
 
-export async function register(req, res) {
-  try {
-    const user = await authService.registerUser(req.body);
+export const register = asyncHandler(async (req, res) => {
+  const user = await authService.registerUser(req.body);
 
-    res.status(201).json({
-      message: "User created",
-      data: user
-    });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-}
+  res.status(201).json({
+    message: "User created",
+    data: user
+  });
+});
 
-export async function login(req, res) {
-  try {
-    const tokens = await authService.loginUser(
-      req.body.email,
-      req.body.password
-    );
+export const login = asyncHandler(async (req, res) => {
+  const tokens = await authService.loginUser(
+    req.body.email,
+    req.body.password
+  );
 
-    res.json(tokens);
-  } catch (error) {
-    res.status(401).json({ error: error.message });
-  }
-}
+  res.json(tokens);
+});
+
+export const refresh = asyncHandler( async (req, res) => {
+  const { refreshToken } = req.body;
+
+  const token = await authService.refreshToken(refreshToken);
+
+  res.json(token);
+});
+
+export const logout = asyncHandler(async (req, res) => {
+  const { refreshToken } = req.body;
+
+  await authService.logout(refreshToken);
+
+  res.json({
+    message: "Logged out"
+  });
+})
